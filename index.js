@@ -1,7 +1,10 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
+app.use(cors())
 app.use(express.json())
+app.use(express.static('build'))
 
 let persons = [
     {
@@ -62,13 +65,13 @@ const generateId = () => {
     return Math.floor(Math.random() * 10000)
 }
 
-names = persons.map(person => person.name)
-console.log(names)
-
+const names = persons.map(person => person.name)
 
 app.post('/api/persons', (request, response) => {
 
     const body = request.body
+
+    console.log(body)
 
     if (!body.name || !body.number) {
         return response.status(400).json({ 
@@ -94,7 +97,7 @@ app.post('/api/persons', (request, response) => {
 })
 
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
