@@ -12,7 +12,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
-  const [info, setInfo] = useState({ message: null})
+  const [info, setInfo] = useState({ message: null })
 
   useEffect(() => {
     personService.getAll().then((initialPersons => 
@@ -71,9 +71,12 @@ const App = () => {
       console.log(createdPerson)
       setPersons(persons.concat(createdPerson))
       notifyWith(`${createdPerson.name} added!`)
-
-      cleanForm()
     })
+    .catch(() => {
+      notifyWith(`Person validation failed: name: ${newName} is shorter than the minimum allowed length (3)`)
+    })
+
+    cleanForm()
 
   }
 
