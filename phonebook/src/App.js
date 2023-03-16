@@ -8,45 +8,45 @@ import Notification from './components/Notification'
 import personService from './services/persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([]) 
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [info, setInfo] = useState({ message: null })
 
   useEffect(() => {
-    personService.getAll().then((initialPersons => 
+    personService.getAll().then((initialPersons =>
       setPersons(initialPersons)
     ))
   }, [])
 
-  const notifyWith = (message, type='info') => {
+  const notifyWith = (message, type = 'info') => {
     setInfo({
       message, type
     })
 
     setTimeout(() => {
-      setInfo({ message: null} )
+      setInfo({ message: null })
     }, 3000)
   }
 
   const cleanForm = () => {
     setNewName('')
-    setNewNumber('') 
+    setNewNumber('')
   }
 
   const updatePerson = (person) => {
     const ok = window.confirm(`${newName} is already added to phonebook, replace the number?`)
     if (ok) {
-      
-      personService.update(person.id, {...person, number: newNumber}).then((updatedPerson) => {
-        setPersons(persons.map(p => p.id !== person.id ? p :updatedPerson ))
+
+      personService.update(person.id, { ...person, number: newNumber }).then((updatedPerson) => {
+        setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
         notifyWith(`phone number of ${person.name} updated!`)
       })
-      .catch(() => {
-        notifyWith(`${person.name} has already been removed`, 'error')
-        setPersons(persons.filter(p => p.id !== person.id))
-      })
+        .catch(() => {
+          notifyWith(`${person.name} has already been removed`, 'error')
+          setPersons(persons.filter(p => p.id !== person.id))
+        })
 
       cleanForm()
     }
@@ -72,9 +72,9 @@ const App = () => {
       setPersons(persons.concat(createdPerson))
       notifyWith(`${createdPerson.name} added!`)
     })
-    .catch(() => {
-      notifyWith(`Person validation failed: name: ${newName} is shorter than the minimum allowed length (3)`)
-    })
+      .catch(() => {
+        notifyWith(`Person validation failed: name: ${newName} is shorter than the minimum allowed length (3)`)
+      })
 
     cleanForm()
 
@@ -82,8 +82,8 @@ const App = () => {
 
   const removePerson = (person) => {
     const ok = window.confirm(`remove ${person.name} from phonebook?`)
-    if ( ok ) {
-      personService.remove(person.id).then( () => {
+    if (ok) {
+      personService.remove(person.id).then(() => {
         setPersons(persons.filter(p => p.id !== person.id))
         notifyWith(`number of ${person.name} deleted!`)
       })
@@ -102,10 +102,10 @@ const App = () => {
       <Notification info={info} />
 
       <Filter filter={filter} setFilter={setFilter} />
-      
+
       <h3>Add a new</h3>
 
-      <PersonForm 
+      <PersonForm
         addPerson={addPerson}
         newName={newName}
         newNumber={newNumber}
